@@ -1,0 +1,24 @@
+{
+
+	"data": [
+	
+		{"name": "vodka", "units": 1, "color": "white"},
+		{"name": "gin", "units": 1, "color": "white"},
+		{"name": "whiskey", "units": 1, "color": "brown"},
+		{"name": "rum", "units": 1, "color": "brown"},
+		{"name": "tequila", "units": 1, "color": "white"},
+		{"name": "apple sours", "units": 0.375, "color": "green"},
+
+		{"name": "lemonade", "units": 0, "color": "yellow"},
+		{"name": "cola", "units": 0, "color": "black"},
+		{"name": "orange juice", "units": 0, "color": "orange"},
+		{"name": "cranberry juice", "units": 0, "color": "red"},
+		{"name": "tomato juice", "units": 0, "color": "red"},
+		{"name": "tonic", "units": 0, "color": "white"},
+		{"name": "orangade", "units": 0, "color": "orange"},
+		{"name": "cherryade", "units": 0, "color": "red"},
+		{"name": "cream soda", "units": 0, "color": "white"}
+	
+	]
+
+}

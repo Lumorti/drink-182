@@ -1,0 +1,24 @@
+{
+
+	"data": [
+	
+		{"name": "vodka lemonade", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "lemonade", "ml": 300}
+		]},
+		{"name": "vodka coke", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "coke", "ml": 300}
+		]},
+		{"name": "vodka orangeade", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "orangeade", "ml": 300}
+		]},
+		{"name": "vodka orange", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "orange juice", "ml": 300}
+		]}
+	
+	]
+
+}
