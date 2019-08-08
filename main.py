@@ -9,6 +9,8 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.dropdown import DropDown
 from kivy.config import Config
+from kivy.uix.spinner import Spinner
+from kivy.lang import Builder
 
 from functools import partial
 import copy
@@ -16,12 +18,46 @@ import json
 
 fs = 25
 
+Builder.load_string('''
+<SpinnerOption>:
+    font_size: 25
+    size: (190, 70)
+
+''')
+
 with open("liquids.json") as f:
     liquidList = json.load(f)["data"]
+liquidNameList = []
+for l in liquidList:
+    liquidNameList.append(l["name"])
 with open("drinks.json") as f:
     drinksList = json.load(f)["data"]
 
-# TODO determine which drinks are availible
+print("loaded " + str(len(liquidList)) + " liquids")
+print("loaded " + str(len(drinksList)) + " drinks")
+
+liquidsAvail = ["lemonade", "vodka", "cola", "rum", "tropicalade", "gin", "orangeade", "limeade"]
+
+# Return the liquid object from a name
+def getLiquid(name):
+    for l in liquidList:
+        if l["name"] == name: return l
+    return None
+
+# Determine which drinks are availible
+for drink in drinksList:
+    canMake = True
+    for ingred in drink["ingredients"]:
+        liq = getLiquid(ingred["name"])
+        if liq:
+            if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
+                canMake = False
+                break
+        else:
+            print("unknown liquid: " + str(ingred["name"]))
+            canMake = False
+            break
+    drink["canMake"] = canMake
 
 class DrinksUI(Widget):
 
@@ -82,17 +118,22 @@ class DrinksUI(Widget):
             self.customLayout.size = Window.size[0], Window.size[1]
             self.customLayout.center = Window.center
             btn = Button(text = "custom", size_hint=(None,None), size=(Window.width/2.0, Window.height/10.0), font_size=fs)
-            btn.bind(on_press=partial(self.setDrink, {"name":"custom", "ingredients":[{"name":"","ml":0}]}))
+            btn.bind(on_press=partial(self.setDrink, {"name":"custom", "ingredients":[{"name":"vodka","ml":25}]}))
             self.customLayout.add_widget(btn)
 
             # Add all the different drinks
             for i in range(len(drinksList)):
-                btn = Button(text = str(drinksList[i]["name"]))
-                btn.font_size = 25
-                btn.size_hint_y = None 
-                btn.height = 60
-                btn.bind(on_press=partial(self.setDrink, drinksList[i]))
-                layout.add_widget(btn)
+                if drinksList[i]["canMake"]:
+                    btn = Button(text = str(drinksList[i]["name"]))
+                    btn.font_size = 25
+                    btn.size_hint_y = None 
+                    btn.height = 60
+                    btn.bind(on_press=partial(self.setDrink, drinksList[i]))
+                    layout.add_widget(btn)
+                    
+            # Add some spacing at the end
+            lbl = Label(text="", height=60)
+            layout.add_widget(lbl)
 
             # Set up scrolling of the main list
             scrolling = ScrollView(size_hint=(None, None), size=(Window.width, Window.height))
@@ -138,30 +179,30 @@ class DrinksUI(Widget):
             self.drinkLayout.center = Window.center
 
             # Add the drop down boxes to the info TODO make all boxes work
-            self.drinkInfo = GridLayout(cols=4, spacing=20, size_hint=(None,None))
-            for i in range(len(self.currentDrink["ingredients"])):
-                dropdown = DropDown()
-                for index in range(len(liquidList)):
-                    btn = Button(text=liquidList[index]["name"], size_hint_y=None, height=80, font_size=fs)
-                    btn.bind(on_release=lambda btn: dropdown.select(btn.text))
-                    dropdown.add_widget(btn)
-                mainbutton = Button(text=self.currentDrink["ingredients"][i]["name"], size_hint=(None, None), size=(180,80), font_size=fs)
-                mainbutton.bind(on_release=dropdown.open)
-                dropdown.bind(on_select=lambda instance, x: setattr(mainbutton, 'text', x))
-                self.drinkInfo.add_widget(mainbutton)
+            self.dropButtons = []
+            self.drinkInfo = GridLayout(cols=4, spacing=15, size_hint=(None,None))
+            for index, ing in enumerate(self.currentDrink["ingredients"]):
+                spinner = Spinner(text=ing["name"], values=liquidNameList, size_hint=(None, None), size=(190, 80), font_size=fs)
+                spinner.ind = index
+                def show_selected_value(spinner, text):
+                    print('The spinner', spinner.ind, 'has text', text)
+                    self.currentDrink["ingredients"][spinner.ind]["name"] = text
+                spinner.bind(text=show_selected_value)
+
+                self.drinkInfo.add_widget(spinner)
                 btn = Button(text="-", size_hint=(None, None), height=80, width=50, font_size=fs)
-                btn.bind(on_press=partial(self.changeDrink, self.currentDrink["ingredients"][i]["name"], -25))
+                btn.bind(on_press=partial(self.changeDrink, index, -25))
                 self.drinkInfo.add_widget(btn)
-                btn = Label(text=str(self.currentDrink["ingredients"][i]["ml"])+" ml", size_hint=(None, None), height=80, width=80, font_size=fs)
-                self.drinkInfo.add_widget(btn)
+                lbl = Label(id="lbl"+str(index),text=str(ing["ml"])+" ml", size_hint=(None, None), height=80, width=80, font_size=fs)
+                self.drinkInfo.add_widget(lbl)
                 btn = Button(text="+", size_hint=(None, None), height=80, width=50, font_size=fs)
-                btn.bind(on_press=partial(self.changeDrink, self.currentDrink["ingredients"][i]["name"], 25))
+                btn.bind(on_press=partial(self.changeDrink, index, 25))
                 self.drinkInfo.add_widget(btn)
 
             # Set up the scrolling list of ingredients
             self.scrollingDrinks = ScrollView(size_hint=(None, None), size=(Window.width, Window.height))
             self.scrollingDrinks.size_hint = None, None
-            self.scrollingDrinks.size = self.drinkLayout.size[0]*0.92, self.drinkLayout.size[1]*0.85
+            self.scrollingDrinks.size = self.drinkLayout.size[0]*0.85, self.drinkLayout.size[1]*0.85
             self.scrollingDrinks.center = self.drinkLayout.center
             self.scrollingDrinks.add_widget(self.drinkInfo)
             self.drinkLayout.add_widget(self.scrollingDrinks)
@@ -182,19 +223,15 @@ class DrinksUI(Widget):
         print("making drink:" + repr(drinkObj))
         # TODO check to make sure drink is valid
 
-    def changeDrink(self, ingred, change, *largs):
+    def changeDrink(self, index, change, *largs):
 
-        print("changing drink ingredient:" + repr(ingred) + " by: " + str(change))
-        found = False
-        for j in range(len(self.currentDrink)):
-            if self.currentDrink["ingredients"][j]["name"] == ingred:
-                self.currentDrink["ingredients"][j]["ml"] += change
-                found = True
+        print("changing drink ingredient at index:" + str(index) + " by: " + str(change))
+        self.currentDrink["ingredients"][index]["ml"] += change
 
-        if not found:
-            self.currentDrink["ingredients"].append({"name": ingred, "ml": 0})
+        for wid in self.drinkInfo.children:
+            if wid.id == "lbl" + str(index):
+                wid.text = str(self.currentDrink["ingredients"][index]["ml"]) + " ml"
 
-        self.setMenu(2)
         # TODO output info about drink (units/subs)
 
 class DrinksApp(App):

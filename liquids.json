@@ -1,29 +1,32 @@
 {
 
-	"data": [
-	
-		{"name": "lemonade", "units": 0, "color": "yellow"},
-		{"name": "cola", "units": 0, "color": "black"},
-		{"name": "orangade", "units": 0, "color": "orange", "subs": "orange juice"},
-		{"name": "tropicalade", "units": 0, "color": "yellow", "subs": "pineapple juice"},
-		{"name": "vodka", "units": 1, "color": "white"},
-		{"name": "gin", "units": 1, "color": "white"},
-		{"name": "rum", "units": 1, "color": "brown"},
+"data": [
 
-		{"name": "cranberry juice", "units": 0, "color": "red"},
-		{"name": "whiskey", "units": 1, "color": "brown"},
-		{"name": "apple sours", "units": 0.375, "color": "green"},
-		{"name": "vermouth", "units": 0.3, "color": "brown"},
-		{"name": "tomato juice", "units": 0, "color": "red"},
-		{"name": "cherryade", "units": 0, "color": "red"},
-		{"name": "limeade", "units": 0, "color": "green"},
-		{"name": "tequila", "units": 1, "color": "white", "subs": "vodka"},
-		{"name": "triple sec", "units": 1, "color": "orange", "subs": "orangeade"},
-		{"name": "orange juice", "units": 0, "color": "orange", "subs": "orangeade"},
-		{"name": "pineapple juice", "units": 0, "color": "yellow", "subs": "tropicalade"},
-		{"name": "tonic", "units": 0, "color": "white", "subs": "lemonade"},
-		{"name": "cream soda", "units": 0, "color": "white", "subs": "lemonade"}
-	
-	]
+	{"name": "lemonade",        "units": 0,		"color": "yellow", "subs": ""},
+	{"name": "cola",            "units": 0,		"color": "black",  "subs": ""},
+	{"name": "orangeade",       "units": 0,		"color": "orange", "subs": "orange juice"},
+	{"name": "tropicalade",     "units": 0,		"color": "yellow", "subs": "pineapple juice"},
+	{"name": "vodka",           "units": 1,		"color": "white",  "subs": ""},
+	{"name": "gin",             "units": 1,		"color": "white",  "subs": ""},
+	{"name": "rum",             "units": 1,		"color": "brown",  "subs": ""},
+
+	{"name": "cranberry juice", "units": 0,		"color": "red",    "subs": ""},
+	{"name": "whiskey",			"units": 1,		"color": "brown",  "subs": ""},
+	{"name": "brandy",			"units": 1,		"color": "brown",  "subs": ""},
+	{"name": "apple sours",		"units": 0.375, "color": "green",  "subs": ""},
+	{"name": "vermouth",		"units": 0.3,	"color": "brown",  "subs": ""},
+	{"name": "schnapps",		"units": 0.3,	"color": "orange", "subs": ""},
+	{"name": "tomato juice",	"units": 0,		"color": "red",    "subs": ""},
+	{"name": "cherryade",		"units": 0,		"color": "red",    "subs": ""},
+	{"name": "milk",			"units": 0,		"color": "white",  "subs": ""},
+	{"name": "limeade",			"units": 0,		"color": "green",  "subs": ""},
+	{"name": "tequila",			"units": 1,		"color": "white",  "subs": "vodka"},
+	{"name": "triple sec",		"units": 1,		"color": "orange", "subs": "orangeade"},
+	{"name": "orange juice",	"units": 0,		"color": "orange", "subs": "orangeade"},
+	{"name": "pineapple juice", "units": 0,		"color": "yellow", "subs": "tropicalade"},
+	{"name": "tonic",			"units": 0,		"color": "white",  "subs": "lemonade"},
+	{"name": "cream soda",		"units": 0,		"color": "white",  "subs": "lemonade"}
+
+]
 
 }

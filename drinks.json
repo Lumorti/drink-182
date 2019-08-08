@@ -7,16 +7,16 @@
 			{"name": "lemonade", "ml": 300}
 		]},
 		{"name": "whiskey and coke", "ingredients": [
-			{"name": "rum", "ml": 50},
-			{"name": "coke", "ml": 300}
+			{"name": "whiskey", "ml": 50},
+			{"name": "cola", "ml": 300}
 		]},
 		{"name": "rum and coke", "ingredients": [
 			{"name": "rum", "ml": 50},
-			{"name": "coke", "ml": 300}
+			{"name": "cola", "ml": 300}
 		]},
 		{"name": "vodka and coke", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "coke", "ml": 300}
+			{"name": "cola", "ml": 300}
 		]},
 		{"name": "white russian", "ingredients": [
 			{"name": "vodka", "ml": 50},
@@ -62,6 +62,11 @@
 			{"name": "triple sec", "ml": 25},
 			{"name": "orangeade", "ml": 300}
 		]},
+		{"name": "cuba libre", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "limeade", "ml": 50},
+			{"name": "cola", "ml": 250}
+		]},
 		{"name": "bloody mary", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "tomato juice", "ml": 300}
@@ -81,18 +86,18 @@
 			{"name": "gin", "ml": 50},
 			{"name": "vermouth", "ml": 300}
 		]},
+		{"name": "kamikaze", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "orangeade", "ml": 50},
+			{"name": "limeade", "ml": 50}
+		]},
+		{"name": "screwdriver", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "orangeade", "ml": 300}
+		]},
 		{"name": "manhattan", "ingredients": [
 			{"name": "whiskey", "ml": 50},
 			{"name": "vermouth", "ml": 300}
-		]},
-		{"name": "rum shot", "ingredients": [
-			{"name": "rum", "ml": 25}
-		]},
-		{"name": "whiskey shot", "ingredients": [
-			{"name": "whiskey", "ml": 25}
-		]},
-		{"name": "vodka shot", "ingredients": [
-			{"name": "vodka", "ml": 25}
 		]},
 		{"name": "daquiri", "ingredients": [
 			{"name": "rum", "ml": 50},
@@ -101,6 +106,14 @@
 		{"name": "mojito", "ingredients": [
 			{"name": "rum", "ml": 50},
 			{"name": "limeade", "ml": 300}
+		]},
+		{"name": "vodka gimlet", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "limeade", "ml": 50}
+		]},
+		{"name": "gimlet", "ingredients": [
+			{"name": "gin", "ml": 50},
+			{"name": "limeade", "ml": 50}
 		]}
 	
 	]
