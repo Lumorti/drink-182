@@ -2,21 +2,105 @@
 
 	"data": [
 	
-		{"name": "vodka lemonade", "ingredients": [
+		{"name": "vodka and lemonade", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "lemonade", "ml": 300}
 		]},
-		{"name": "vodka coke", "ingredients": [
+		{"name": "whiskey and coke", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "coke", "ml": 300}
+		]},
+		{"name": "rum and coke", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "coke", "ml": 300}
+		]},
+		{"name": "vodka and coke", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "coke", "ml": 300}
 		]},
-		{"name": "vodka orangeade", "ingredients": [
+		{"name": "white russian", "ingredients": [
 			{"name": "vodka", "ml": 50},
+			{"name": "milk", "ml": 50}
+		]},
+		{"name": "long island", "ingredients": [
+			{"name": "vodka", "ml": 25},
+			{"name": "rum", "ml": 25},
+			{"name": "tequila", "ml": 25},
+			{"name": "gin", "ml": 25},
+			{"name": "triple sec", "ml": 25},
+			{"name": "cola", "ml": 225}
+		]},
+		{"name": "tom collins", "ingredients": [
+			{"name": "gin", "ml": 50},
+			{"name": "lemonade", "ml": 300}
+		]},
+		{"name": "painkiller", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "orange juice", "ml": 150},
+			{"name": "pineapple juice", "ml": 150}
+		]},
+		{"name": "vodka martini", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "vermouth", "ml": 300}
+		]},
+		{"name": "cosmopolitan", "ingredients": [
+			{"name": "vodka", "ml": 25},
+			{"name": "triple sec", "ml": 25},
+			{"name": "cranberry juice", "ml": 300}
+		]},
+		{"name": "sidecar", "ingredients": [
+			{"name": "brandy", "ml": 25},
+			{"name": "triple sec", "ml": 25},
+			{"name": "lemonade", "ml": 300}
+		]},
+		{"name": "pina collada", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "pineapple juice", "ml": 300}
+		]},
+		{"name": "mai tai", "ingredients": [
+			{"name": "rum", "ml": 25},
+			{"name": "triple sec", "ml": 25},
 			{"name": "orangeade", "ml": 300}
 		]},
-		{"name": "vodka orange", "ingredients": [
+		{"name": "bloody mary", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "orange juice", "ml": 300}
+			{"name": "tomato juice", "ml": 300}
+		]},
+		{"name": "margarita", "ingredients": [
+			{"name": "tequila", "ml": 25},
+			{"name": "triple sec", "ml": 25},
+			{"name": "limeade", "ml": 300}
+		]},
+		{"name": "sex on the beach", "ingredients": [
+			{"name": "vodka", "ml": 25},
+			{"name": "schnapps", "ml": 25},
+			{"name": "orange juice", "ml": 150},
+			{"name": "cranberry juice", "ml": 150}
+		]},
+		{"name": "martini", "ingredients": [
+			{"name": "gin", "ml": 50},
+			{"name": "vermouth", "ml": 300}
+		]},
+		{"name": "manhattan", "ingredients": [
+			{"name": "whiskey", "ml": 50},
+			{"name": "vermouth", "ml": 300}
+		]},
+		{"name": "rum shot", "ingredients": [
+			{"name": "rum", "ml": 25}
+		]},
+		{"name": "whiskey shot", "ingredients": [
+			{"name": "whiskey", "ml": 25}
+		]},
+		{"name": "vodka shot", "ingredients": [
+			{"name": "vodka", "ml": 25}
+		]},
+		{"name": "daquiri", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "limeade", "ml": 300}
+		]},
+		{"name": "mojito", "ingredients": [
+			{"name": "rum", "ml": 50},
+			{"name": "limeade", "ml": 300}
 		]}
 	
 	]
