@@ -18,6 +18,10 @@ import json
 
 fs = 25
 
+cupSize = 350
+maxChange = 25
+maxBooze = 100
+
 Builder.load_string('''
 <SpinnerOption>:
     font_size: 25
@@ -27,9 +31,11 @@ Builder.load_string('''
 
 with open("liquids.json") as f:
     liquidList = json.load(f)["data"]
+
 liquidNameList = []
 for l in liquidList:
     liquidNameList.append(l["name"])
+
 with open("drinks.json") as f:
     drinksList = json.load(f)["data"]
 
@@ -48,6 +54,7 @@ def getLiquid(name):
 for drink in drinksList:
     canMake = True
     for ingred in drink["ingredients"]:
+        ingred["og"] = ingred["ml"]
         liq = getLiquid(ingred["name"])
         if liq:
             if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
@@ -84,8 +91,8 @@ class DrinksUI(Widget):
             self.startLayout.size = Window.size
             self.startLayout.center = Window.center
             startButton = Button(text="Start")
-            startButton.size_hint = 0.5, 0.3
-            startButton.font_size = 40
+            startButton.size_hint = 0.5, 0.2
+            startButton.font_size = 35
             buttonEvent = partial(self.setMenu, 1)
             startButton.bind(on_press=buttonEvent)
             self.startLayout.add_widget(startButton)
@@ -96,11 +103,11 @@ class DrinksUI(Widget):
         elif self.menu == 1:
 
             # Add the back button
-            self.backLayout = AnchorLayout(anchor_x='left', anchor_y='top')
+            self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
             self.backLayout.size_hint = None, None
-            self.backLayout.size = Window.size[0], Window.size[1]
+            self.backLayout.size = Window.size[0], Window.size[1] * 0.95
             self.backLayout.center = Window.center
-            btn = Button(text = "back", size_hint=(None, None), size=(Window.width/2.0, Window.height/10.0), font_size=fs)
+            btn = Button(text = "back", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
             btn.bind(on_press=partial(self.setMenu, 0))
             self.backLayout.add_widget(btn)
                 
@@ -112,15 +119,6 @@ class DrinksUI(Widget):
             layout = GridLayout(cols=1, spacing=30, size_hint_y=None)
             layout.bind(minimum_height=layout.setter('height'))
             
-            # Add the custom button
-            self.customLayout = AnchorLayout(anchor_x='right', anchor_y='top')
-            self.customLayout.size_hint = None, None
-            self.customLayout.size = Window.size[0], Window.size[1]
-            self.customLayout.center = Window.center
-            btn = Button(text = "custom", size_hint=(None,None), size=(Window.width/2.0, Window.height/10.0), font_size=fs)
-            btn.bind(on_press=partial(self.setDrink, {"name":"custom", "ingredients":[{"name":"vodka","ml":25}]}))
-            self.customLayout.add_widget(btn)
-
             # Add all the different drinks
             for i in range(len(drinksList)):
                 if drinksList[i]["canMake"]:
@@ -139,7 +137,7 @@ class DrinksUI(Widget):
             scrolling = ScrollView(size_hint=(None, None), size=(Window.width, Window.height))
             scrolling.add_widget(layout)
             scrolling.size_hint = None, None
-            scrolling.size = self.mainLayout.size[0]*0.75, self.mainLayout.size[1]*0.85
+            scrolling.size = self.mainLayout.size[0]*0.75, self.mainLayout.size[1]*0.83
             scrolling.center = self.mainLayout.center
             scrolling.bar_width = 0
             layout.center = scrolling.center
@@ -148,26 +146,25 @@ class DrinksUI(Widget):
             # Add the various sections to the root widget
             self.add_widget(self.mainLayout)
             self.add_widget(self.backLayout)
-            self.add_widget(self.customLayout)
 
         elif self.menu == 2:
 
             # Add the back button
-            self.backLayout = AnchorLayout(anchor_x='left', anchor_y='top')
+            self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
             self.backLayout.size_hint = None, None
-            self.backLayout.size = Window.size[0], Window.size[1]
+            self.backLayout.size = Window.size[0], Window.size[1] * 0.95
             self.backLayout.center = Window.center
-            btn = Button(text = "back", size_hint=(None, None), size=(Window.width/2.0, Window.height/10.0), font_size=fs)
+            btn = Button(text = "back", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
             buttonEvent = partial(self.setMenu, 1)
             btn.bind(on_press=buttonEvent)
             self.backLayout.add_widget(btn)
             
             # Add the make button
-            self.makeLayout = AnchorLayout(anchor_x='right', anchor_y='top')
+            self.makeLayout = AnchorLayout(anchor_x='center', anchor_y='bottom')
             self.makeLayout.size_hint = None, None
-            self.makeLayout.size = Window.size[0], Window.size[1]
+            self.makeLayout.size = Window.size[0], Window.size[1] * 0.95
             self.makeLayout.center = Window.center
-            btn = Button(text = "make", size_hint=(None, None), size=(Window.width/2.0, Window.height/10.0), font_size=fs)
+            btn = Button(text = "make", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
             buttonEvent = partial(self.makeDrink, self.currentDrink)
             btn.bind(on_press=buttonEvent)
             self.makeLayout.add_widget(btn)
@@ -178,24 +175,20 @@ class DrinksUI(Widget):
             self.drinkLayout.size = Window.size[0], Window.size[1]
             self.drinkLayout.center = Window.center
 
-            # Add the drop down boxes to the info TODO make all boxes work
+            # Add the drop down boxes to the info 
             self.dropButtons = []
             self.drinkInfo = GridLayout(cols=4, spacing=15, size_hint=(None,None))
             for index, ing in enumerate(self.currentDrink["ingredients"]):
-                spinner = Spinner(text=ing["name"], values=liquidNameList, size_hint=(None, None), size=(190, 80), font_size=fs)
+                spinner = Label(text=ing["name"], size_hint=(None, None), size=(190, 50), font_size=fs)
                 spinner.ind = index
-                def show_selected_value(spinner, text):
-                    print('The spinner', spinner.ind, 'has text', text)
-                    self.currentDrink["ingredients"][spinner.ind]["name"] = text
-                spinner.bind(text=show_selected_value)
 
                 self.drinkInfo.add_widget(spinner)
-                btn = Button(text="-", size_hint=(None, None), height=80, width=50, font_size=fs)
+                btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
                 btn.bind(on_press=partial(self.changeDrink, index, -25))
                 self.drinkInfo.add_widget(btn)
-                lbl = Label(id="lbl"+str(index),text=str(ing["ml"])+" ml", size_hint=(None, None), height=80, width=80, font_size=fs)
+                lbl = Label(id="lbl"+str(index),text=str(ing["ml"])+" ml", size_hint=(None, None), height=50, width=80, font_size=fs)
                 self.drinkInfo.add_widget(lbl)
-                btn = Button(text="+", size_hint=(None, None), height=80, width=50, font_size=fs)
+                btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
                 btn.bind(on_press=partial(self.changeDrink, index, 25))
                 self.drinkInfo.add_widget(btn)
 
@@ -209,8 +202,8 @@ class DrinksUI(Widget):
 
             # Add the various sections to the root widget
             self.add_widget(self.backLayout)
-            self.add_widget(self.makeLayout)
             self.add_widget(self.drinkLayout)
+            self.add_widget(self.makeLayout)
 
     def setDrink(self, drinkObj, *largs):
 
@@ -221,12 +214,19 @@ class DrinksUI(Widget):
     def makeDrink(self, drinkObj, *largs):
 
         print("making drink:" + repr(drinkObj))
+        self.setMenu(0)
         # TODO check to make sure drink is valid
 
     def changeDrink(self, index, change, *largs):
 
         print("changing drink ingredient at index:" + str(index) + " by: " + str(change))
-        self.currentDrink["ingredients"][index]["ml"] += change
+
+        ing = self.currentDrink["ingredients"][index]
+        if ing["ml"]+change >= ing["og"] - 25 and ing["ml"]+change <= ing["og"] + 25:
+            ing["ml"] += change
+
+        if ing["ml"] < 0:
+            ing["ml"] = 0
 
         for wid in self.drinkInfo.children:
             if wid.id == "lbl" + str(index):
