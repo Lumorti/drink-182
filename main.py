@@ -189,12 +189,16 @@ class DrinksUI(Widget):
             for ing in self.currentDrink["ingredients"]:
                 if ing["name"] not in liquidsAvail:
                     print("substituting " + ing["name"] + " for " + getLiquid(ing["name"])["subs"])
+                    ing["oldName"] = ing["name"]
                     ing["name"] = getLiquid(ing["name"])["subs"]
             
             # Add the drop down boxes to the info 
             self.drinkInfo = GridLayout(cols=4, spacing=15, size_hint=(None,None))
             for index, ing in enumerate(self.currentDrink["ingredients"]):
-                spinner = Label(text=ing["name"], size_hint=(None, None), size=(190, 50), font_size=fs)
+                if "oldName" in ing.keys():
+                    spinner = Label(text=ing["oldName"]+"\n("+ing["name"]+")", size_hint=(None, None), size=(190, 50), font_size=fs)
+                else:
+                    spinner = Label(text=ing["name"], size_hint=(None, None), size=(190, 50), font_size=fs)
                 spinner.ind = index
 
                 self.drinkInfo.add_widget(spinner)
