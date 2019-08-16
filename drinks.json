@@ -4,19 +4,19 @@
 	
 		{"name": "vodka and lemonade", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "lemonade", "ml": 300}
+			{"name": "lemonade", "ml": 250}
 		]},
 		{"name": "whiskey and coke", "ingredients": [
 			{"name": "whiskey", "ml": 50},
-			{"name": "cola", "ml": 300}
+			{"name": "cola", "ml": 250}
 		]},
 		{"name": "rum and coke", "ingredients": [
 			{"name": "rum", "ml": 50},
-			{"name": "cola", "ml": 300}
+			{"name": "cola", "ml": 250}
 		]},
 		{"name": "vodka and coke", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "cola", "ml": 300}
+			{"name": "cola", "ml": 250}
 		]},
 		{"name": "white russian", "ingredients": [
 			{"name": "vodka", "ml": 50},
@@ -28,63 +28,63 @@
 			{"name": "tequila", "ml": 25},
 			{"name": "gin", "ml": 25},
 			{"name": "triple sec", "ml": 25},
-			{"name": "cola", "ml": 225}
+			{"name": "cola", "ml": 175}
 		]},
 		{"name": "tom collins", "ingredients": [
 			{"name": "gin", "ml": 50},
-			{"name": "lemonade", "ml": 300}
+			{"name": "lemonade", "ml": 250}
 		]},
 		{"name": "painkiller", "ingredients": [
 			{"name": "rum", "ml": 50},
-			{"name": "orange juice", "ml": 150},
-			{"name": "pineapple juice", "ml": 150}
+			{"name": "orange juice", "ml": 125},
+			{"name": "pineapple juice", "ml": 125}
 		]},
 		{"name": "vodka martini", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "vermouth", "ml": 300}
+			{"name": "vermouth", "ml": 250}
 		]},
 		{"name": "cosmopolitan", "ingredients": [
 			{"name": "vodka", "ml": 25},
 			{"name": "triple sec", "ml": 25},
-			{"name": "cranberry juice", "ml": 300}
+			{"name": "cranberry juice", "ml": 250}
 		]},
 		{"name": "sidecar", "ingredients": [
 			{"name": "brandy", "ml": 25},
 			{"name": "triple sec", "ml": 25},
-			{"name": "lemonade", "ml": 300}
+			{"name": "lemonade", "ml": 250}
 		]},
-		{"name": "pina collada", "ingredients": [
+		{"name": "piña colada", "ingredients": [
 			{"name": "rum", "ml": 50},
-			{"name": "pineapple juice", "ml": 300}
+			{"name": "pineapple juice", "ml": 250}
 		]},
 		{"name": "mai tai", "ingredients": [
 			{"name": "rum", "ml": 25},
 			{"name": "triple sec", "ml": 25},
-			{"name": "orangeade", "ml": 300}
+			{"name": "orangeade", "ml": 250}
 		]},
 		{"name": "cuba libre", "ingredients": [
 			{"name": "rum", "ml": 50},
 			{"name": "limeade", "ml": 50},
-			{"name": "cola", "ml": 250}
+			{"name": "cola", "ml": 200}
 		]},
 		{"name": "bloody mary", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "tomato juice", "ml": 300}
+			{"name": "tomato juice", "ml": 250}
 		]},
 		{"name": "margarita", "ingredients": [
 			{"name": "tequila", "ml": 25},
 			{"name": "triple sec", "ml": 25},
-			{"name": "limeade", "ml": 300}
+			{"name": "limeade", "ml": 250}
 		]},
 		{"name": "sex on the beach", "ingredients": [
 			{"name": "vodka", "ml": 25},
 			{"name": "schnapps", "ml": 25},
-			{"name": "orange juice", "ml": 150},
-			{"name": "cranberry juice", "ml": 150}
+			{"name": "orange juice", "ml": 125},
+			{"name": "cranberry juice", "ml": 125}
 		]},
 		{"name": "martini", "ingredients": [
 			{"name": "gin", "ml": 50},
-			{"name": "vermouth", "ml": 300}
+			{"name": "vermouth", "ml": 250}
 		]},
 		{"name": "kamikaze", "ingredients": [
 			{"name": "vodka", "ml": 50},
@@ -93,19 +93,19 @@
 		]},
 		{"name": "screwdriver", "ingredients": [
 			{"name": "vodka", "ml": 50},
-			{"name": "orangeade", "ml": 300}
+			{"name": "orangeade", "ml": 250}
 		]},
 		{"name": "manhattan", "ingredients": [
 			{"name": "whiskey", "ml": 50},
-			{"name": "vermouth", "ml": 300}
+			{"name": "vermouth", "ml": 250}
 		]},
 		{"name": "daquiri", "ingredients": [
 			{"name": "rum", "ml": 50},
-			{"name": "limeade", "ml": 300}
+			{"name": "limeade", "ml": 250}
 		]},
 		{"name": "mojito", "ingredients": [
 			{"name": "rum", "ml": 50},
-			{"name": "limeade", "ml": 300}
+			{"name": "limeade", "ml": 250}
 		]},
 		{"name": "vodka gimlet", "ingredients": [
 			{"name": "vodka", "ml": 50},

@@ -14,20 +14,16 @@ from kivy.lang import Builder
 
 from functools import partial
 import copy
+import time
 import json
 
 fs = 25
 
-cupSize = 350
+maxVol = 350
 maxChange = 25
 maxBooze = 100
 
-Builder.load_string('''
-<SpinnerOption>:
-    font_size: 25
-    size: (190, 70)
-
-''')
+correctCode = "19734628"
 
 with open("liquids.json") as f:
     liquidList = json.load(f)["data"]
@@ -73,7 +69,9 @@ class DrinksUI(Widget):
 
         Window.size = (480, 800)
         self.currentDrink = {}
+        self.code = ""
         self.menu = 0
+        self.settings = {"maxBooze": 100, "maxVol": 350, "maxChange": 25}
         self.setMenu(0)
 
     def setMenu(self, menuNum, *largs):
@@ -97,8 +95,21 @@ class DrinksUI(Widget):
             startButton.bind(on_press=buttonEvent)
             self.startLayout.add_widget(startButton)
 
+            # Add the settings button
+            self.settingsLayout = AnchorLayout(anchor_x='left', anchor_y='bottom')
+            self.settingsLayout.size = Window.size
+            self.settingsLayout.center = Window.center
+            settingsButton = Button(text="")
+            settingsButton.size_hint = None, None
+            settingsButton.size = 50, 50
+            settingsButton.font_size = 15
+            buttonEvent = partial(self.setMenu, 3)
+            settingsButton.bind(on_press=buttonEvent)
+            self.settingsLayout.add_widget(settingsButton)
+
             # Add the layouts to the main widget
             self.add_widget(self.startLayout)
+            self.add_widget(self.settingsLayout)
 
         elif self.menu == 1:
 
@@ -164,7 +175,7 @@ class DrinksUI(Widget):
             self.makeLayout.size_hint = None, None
             self.makeLayout.size = Window.size[0], Window.size[1] * 0.95
             self.makeLayout.center = Window.center
-            btn = Button(text = "make", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
+            btn = Button(id="btnmake", text = "make", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
             buttonEvent = partial(self.makeDrink, self.currentDrink)
             btn.bind(on_press=buttonEvent)
             self.makeLayout.add_widget(btn)
@@ -175,8 +186,12 @@ class DrinksUI(Widget):
             self.drinkLayout.size = Window.size[0], Window.size[1]
             self.drinkLayout.center = Window.center
 
+            for ing in self.currentDrink["ingredients"]:
+                if ing["name"] not in liquidsAvail:
+                    print("substituting " + ing["name"] + " for " + getLiquid(ing["name"])["subs"])
+                    ing["name"] = getLiquid(ing["name"])["subs"]
+            
             # Add the drop down boxes to the info 
-            self.dropButtons = []
             self.drinkInfo = GridLayout(cols=4, spacing=15, size_hint=(None,None))
             for index, ing in enumerate(self.currentDrink["ingredients"]):
                 spinner = Label(text=ing["name"], size_hint=(None, None), size=(190, 50), font_size=fs)
@@ -205,6 +220,111 @@ class DrinksUI(Widget):
             self.add_widget(self.drinkLayout)
             self.add_widget(self.makeLayout)
 
+            self.checkDrink()
+
+        elif self.menu == 3:
+
+            # Add the back button
+            self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
+            self.backLayout.size_hint = None, None
+            self.backLayout.size = Window.size[0], Window.size[1] * 0.95
+            self.backLayout.center = Window.center
+            btn = Button(text = "back", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
+            buttonEvent = partial(self.setMenu, 0)
+            btn.bind(on_press=buttonEvent)
+            self.backLayout.add_widget(btn)
+            
+            # Create the keypad
+            self.keypadWrapper = AnchorLayout(anchor_x='center', anchor_y='center')
+            self.keypadWrapper.size_hint = None, None
+            self.keypadWrapper.size = Window.size[0], Window.size[1] 
+            self.keypadWrapper.center = Window.center
+            self.keypadLayout = GridLayout(cols=3)
+            self.keypadLayout.size_hint = None, None
+            self.keypadLayout.size = Window.size[0]*0.5, Window.size[1]*0.5
+            self.keypadLayout.center = Window.center
+            for i in range(9):
+                btn = Button(size_hint=(None,None), size=(80,80), font_size=fs)
+                buttonEvent = partial(self.enterCode, i+1)
+                btn.bind(on_press=buttonEvent)
+                self.keypadLayout.add_widget(btn)
+            self.keypadWrapper.add_widget(self.keypadLayout)
+
+            # Add the various sections to the root widget
+            self.add_widget(self.backLayout)
+            self.add_widget(self.keypadWrapper)
+
+        elif self.menu == 4:
+
+            # Add the back button
+            self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
+            self.backLayout.size_hint = None, None
+            self.backLayout.size = Window.size[0], Window.size[1] * 0.95
+            self.backLayout.center = Window.center
+            btn = Button(text = "back", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
+            buttonEvent = partial(self.setMenu, 0)
+            btn.bind(on_press=buttonEvent)
+            self.backLayout.add_widget(btn)
+
+            # Add the back button
+            self.controlLayout = AnchorLayout(anchor_x='center', anchor_y='center')
+            self.controlLayout.size_hint = None, None
+            self.controlLayout.size = Window.size[0], Window.size[1] * 0.95
+            self.controlLayout.center = Window.center
+            self.controlGrid = GridLayout(cols=4, spacing=15, size_hint=(None,None))
+            self.controlGrid.size = (Window.size[0]-30, 50) 
+
+            # Add a value setting
+            lbl = Label(text="maxBooze", size_hint=(None, None), height=50, width=180, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "maxBooze", -25))
+            self.controlGrid.add_widget(btn)
+            lbl = Label(id="maxBooze",text=str(self.settings["maxBooze"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "maxBooze", 25))
+            self.controlGrid.add_widget(btn)
+
+            # Add a value setting
+            lbl = Label(text="maxVol", size_hint=(None, None), height=50, width=180, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "maxVol", -25))
+            self.controlGrid.add_widget(btn)
+            lbl = Label(id="maxVol",text=str(self.settings["maxVol"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "maxVol", 25))
+            self.controlGrid.add_widget(btn)
+            
+            # Add a value setting
+            lbl = Label(text="maxChange", size_hint=(None, None), height=50, width=180, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "maxChange", -25))
+            self.controlGrid.add_widget(btn)
+            lbl = Label(id="maxChange",text=str(self.settings["maxChange"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "maxChange", 25))
+            self.controlGrid.add_widget(btn)
+            
+            # Add the various sections to the root widget
+            self.add_widget(self.backLayout)
+            self.controlLayout.add_widget(self.controlGrid)
+            self.add_widget(self.controlLayout)
+
+    def enterCode(self, num, *largs):
+
+        if num != 5:
+            self.code += str(num)
+        else:
+            if self.code == correctCode:
+                self.setMenu(4)
+            print("submitted code: " + self.code)
+            self.code = ""
+
     def setDrink(self, drinkObj, *largs):
 
         self.currentDrink = copy.deepcopy(drinkObj)
@@ -215,14 +335,22 @@ class DrinksUI(Widget):
 
         print("making drink:" + repr(drinkObj))
         self.setMenu(0)
-        # TODO check to make sure drink is valid
+
+    def changeSetting(self, setting, change, *largs):
+
+        self.settings[setting] += change
+        for wid in self.controlGrid.children:
+            if wid.id == setting:
+                wid.text = str(self.settings[setting])
+
+        print("setting " + setting + " is now " + str(self.settings[setting]))
 
     def changeDrink(self, index, change, *largs):
 
         print("changing drink ingredient at index:" + str(index) + " by: " + str(change))
 
         ing = self.currentDrink["ingredients"][index]
-        if ing["ml"]+change >= ing["og"] - 25 and ing["ml"]+change <= ing["og"] + 25:
+        if ing["ml"]+change >= ing["og"] - self.settings["maxChange"] and ing["ml"]+change <= ing["og"] + self.settings["maxChange"]:
             ing["ml"] += change
 
         if ing["ml"] < 0:
@@ -232,7 +360,31 @@ class DrinksUI(Widget):
             if wid.id == "lbl" + str(index):
                 wid.text = str(self.currentDrink["ingredients"][index]["ml"]) + " ml"
 
-        # TODO output info about drink (units/subs)
+        self.checkDrink()
+
+    def checkDrink(self):
+
+        numUnits = 0
+        totalVol = 0
+
+        for ingred in self.currentDrink["ingredients"]:
+            numUnits += float(getLiquid(ingred["name"])["units"]) * float(ingred["ml"]) / 25.0
+            totalVol += float(ingred["ml"])
+
+        percent = 100.0 * float(numUnits) * 25.0 * 0.4 / float(totalVol)
+
+        print("drink has " + str(numUnits) + " units within " + str(totalVol) + " ml")
+
+        # Ensure that the drink is valid
+        if numUnits * 25.0 > maxBooze:
+            self.makeLayout.children[0].text = "can't make, too boozy"
+            self.makeLayout.children[0].disabled = True
+        elif totalVol > maxVol:
+            self.makeLayout.children[0].text = "can't make, won't fit in cup"
+            self.makeLayout.children[0].disabled = True
+        else:
+            self.makeLayout.children[0].text = "make (" + str(numUnits) + " units, " + str(round(percent, 1)) + "%)"
+            self.makeLayout.children[0].disabled = False
 
 class DrinksApp(App):
     def build(self):
