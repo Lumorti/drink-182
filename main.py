@@ -11,6 +11,7 @@ from kivy.uix.dropdown import DropDown
 from kivy.config import Config
 from kivy.uix.spinner import Spinner
 from kivy.lang import Builder
+import serial
 
 from functools import partial
 import copy
@@ -66,6 +67,13 @@ class DrinksUI(Widget):
 
     def __init__(self, **kwargs):
         super(DrinksUI, self).__init__(**kwargs)
+
+        # Setup serial interface with Arduino
+        self.ser = serial.Serial('/dev/ttyACM0', 9600, timeout=3)
+        if not self.ser:
+            self.ser = serial.Serial('/dev/ttyACM1', 9600, timeout=3)
+        print(self.ser.name)
+        self.ser.write(b'hello')
 
         Window.size = (480, 800)
         self.currentDrink = {}
@@ -338,6 +346,23 @@ class DrinksUI(Widget):
     def makeDrink(self, drinkObj, *largs):
 
         print("making drink:" + repr(drinkObj))
+
+        sendString = "-"
+        for ing in self.currentDrink["ingredients"]:
+            motorIndex = 0
+            for index, liq in enumerate(liquidsAvail):
+                if liq == ing["name"]: 
+                    motorIndex = index
+                    break
+            sendString += str(motorIndex) + "=" + str(int(ing["ml"])) + "+"
+        sendString += "-\n"
+
+        if self.ser:
+            print("serial availible, sending: " + sendString)
+            self.ser.write(bytes(sendString,"utf-8"))
+        else:
+            print("serial unavailible")
+
         self.setMenu(0)
 
     def changeSetting(self, setting, change, *largs):
