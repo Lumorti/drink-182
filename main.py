@@ -17,6 +17,9 @@ from functools import partial
 import copy
 import time
 import json
+import sys
+import glob
+import serial
 
 fs = 25
 
@@ -25,6 +28,15 @@ maxChange = 25
 maxBooze = 100
 
 correctCode = "19734628"
+
+Builder.load_string("""
+
+<SpinnerOption>:
+    size_hint: None, None
+    size: 200, 60,
+    font_size: 25
+
+""")
 
 with open("liquids.json") as f:
     liquidList = json.load(f)["data"]
@@ -47,21 +59,27 @@ def getLiquid(name):
         if l["name"] == name: return l
     return None
 
-# Determine which drinks are availible
-for drink in drinksList:
-    canMake = True
-    for ingred in drink["ingredients"]:
-        ingred["og"] = ingred["ml"]
-        liq = getLiquid(ingred["name"])
-        if liq:
-            if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
-                canMake = False
-                break
-        else:
-            print("unknown liquid: " + str(ingred["name"]))
-            canMake = False
-            break
-    drink["canMake"] = canMake
+def serial_ports():
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(256)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
+
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
+
 
 class DrinksUI(Widget):
 
@@ -69,11 +87,11 @@ class DrinksUI(Widget):
         super(DrinksUI, self).__init__(**kwargs)
 
         # Setup serial interface with Arduino
-        self.ser = serial.Serial('/dev/ttyACM0', 9600, timeout=3)
-        if not self.ser:
-            self.ser = serial.Serial('/dev/ttyACM1', 9600, timeout=3)
-        print(self.ser.name)
-        self.ser.write(b'hello')
+        try:
+            self.ser = serial.Serial(serial_ports()[0], 9600, timeout=3)
+            print("connected on port: " + self.ser.name)
+        except: 
+            self.ser = None
 
         Window.size = (480, 800)
         self.currentDrink = {}
@@ -120,6 +138,22 @@ class DrinksUI(Widget):
             self.add_widget(self.settingsLayout)
 
         elif self.menu == 1:
+             
+            # Determine which drinks are availible
+            for drink in drinksList:
+                canMake = True
+                for ingred in drink["ingredients"]:
+                    ingred["og"] = ingred["ml"]
+                    liq = getLiquid(ingred["name"])
+                    if liq:
+                        if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
+                            canMake = False
+                            break
+                    else:
+                        print("unknown liquid: " + str(ingred["name"]))
+                        canMake = False
+                        break
+                drink["canMake"] = canMake
 
             # Add the back button
             self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
@@ -278,13 +312,42 @@ class DrinksUI(Widget):
             btn.bind(on_press=buttonEvent)
             self.backLayout.add_widget(btn)
 
-            # Add the back button
-            self.controlLayout = AnchorLayout(anchor_x='center', anchor_y='center')
+            self.controlLayout = AnchorLayout(anchor_x='center', anchor_y='bottom')
             self.controlLayout.size_hint = None, None
-            self.controlLayout.size = Window.size[0], Window.size[1] * 0.95
-            self.controlLayout.center = Window.center
+            self.controlLayout.size = Window.size[0]*0.9, Window.size[1] * 0.80
+            self.controlLayout.center = (Window.center[0], Window.center[1]-50)
+
+            # Set up the wrapper grid
+            self.wrapperGrid = GridLayout(cols=1, spacing=15, size_hint=(None,None))
+            self.wrapperGrid.size = (self.controlLayout.size[0]*0.99, self.controlLayout.size[1]*0.99) 
+            self.wrapperGrid.center = self.controlLayout.center
+
+            # Set up the liquid list grid
+            self.liquidGrid = GridLayout(cols=2, spacing=15, size_hint=(None,None))
+            self.liquidGrid.size = (self.wrapperGrid.size[0]*0.9, self.wrapperGrid.size[1] * 0.5) 
+            self.liquidGrid.center = (self.wrapperGrid.center[0],self.wrapperGrid.center[1])
+            for index, liq in enumerate(liquidsAvail):
+                spinner = Spinner(
+                    text=liq,
+                    id="sd"+str(index),
+                    values=liquidNameList,
+                    size_hint=(None, None),
+                    size=(200, 60),
+                    font_size=fs,
+                    pos_hint=(None,None))
+
+                def change_avail_drink(spinner, text):
+                    ind = int(spinner.id[2:])
+                    print ("changing availible liquid at index " + str(ind) + " to " + text)
+                    liquidsAvail[ind] = text
+
+                spinner.bind(text=change_avail_drink)
+                self.liquidGrid.add_widget(spinner)
+
+            # Add the settings layout
             self.controlGrid = GridLayout(cols=4, spacing=15, size_hint=(None,None))
-            self.controlGrid.size = (Window.size[0]-30, 50) 
+            self.controlGrid.size = (self.wrapperGrid.size[0]*0.9, self.wrapperGrid.size[1] * 0.30) 
+            self.controlGrid.center = self.wrapperGrid.center
 
             # Add a value setting
             lbl = Label(text="maxBooze", size_hint=(None, None), height=50, width=180, font_size=fs)
@@ -324,7 +387,9 @@ class DrinksUI(Widget):
             
             # Add the various sections to the root widget
             self.add_widget(self.backLayout)
-            self.controlLayout.add_widget(self.controlGrid)
+            self.wrapperGrid.add_widget(self.liquidGrid)
+            self.wrapperGrid.add_widget(self.controlGrid)
+            self.controlLayout.add_widget(self.wrapperGrid)
             self.add_widget(self.controlLayout)
 
     def enterCode(self, num, *largs):
