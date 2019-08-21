@@ -20,6 +20,11 @@ import json
 import sys
 import glob
 import serial
+import os
+
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
 fs = 25
 
@@ -52,6 +57,12 @@ print("loaded " + str(len(liquidList)) + " liquids")
 print("loaded " + str(len(drinksList)) + " drinks")
 
 liquidsAvail = ["lemonade", "vodka", "cola", "rum", "tropicalade", "gin", "orangeade", "limeade"]
+
+Config.set('graphics', 'fullscreen', 'borderless')
+Config.set('graphics', 'position', 'custom')
+Config.set('graphics', 'top', '0')
+Config.set('graphics', 'left', '0')
+Config.set('graphics', 'maxfps', '10')
 
 # Return the liquid object from a name
 def getLiquid(name):
@@ -94,10 +105,12 @@ class DrinksUI(Widget):
             self.ser = None
 
         Window.size = (480, 800)
+
         self.currentDrink = {}
         self.code = ""
         self.menu = 0
         self.settings = {"maxBooze": 100, "maxVol": 350, "maxChange": 25}
+        self.update_drinks_list()
         self.setMenu(0)
 
     def setMenu(self, menuNum, *largs):
@@ -139,21 +152,6 @@ class DrinksUI(Widget):
 
         elif self.menu == 1:
              
-            # Determine which drinks are availible
-            for drink in drinksList:
-                canMake = True
-                for ingred in drink["ingredients"]:
-                    ingred["og"] = ingred["ml"]
-                    liq = getLiquid(ingred["name"])
-                    if liq:
-                        if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
-                            canMake = False
-                            break
-                    else:
-                        print("unknown liquid: " + str(ingred["name"]))
-                        canMake = False
-                        break
-                drink["canMake"] = canMake
 
             # Add the back button
             self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
@@ -335,13 +333,7 @@ class DrinksUI(Widget):
                     size=(200, 60),
                     font_size=fs,
                     pos_hint=(None,None))
-
-                def change_avail_drink(spinner, text):
-                    ind = int(spinner.id[2:])
-                    print ("changing availible liquid at index " + str(ind) + " to " + text)
-                    liquidsAvail[ind] = text
-
-                spinner.bind(text=change_avail_drink)
+                spinner.bind(text=self.change_avail_drink)
                 self.liquidGrid.add_widget(spinner)
 
             # Add the settings layout
@@ -391,6 +383,33 @@ class DrinksUI(Widget):
             self.wrapperGrid.add_widget(self.controlGrid)
             self.controlLayout.add_widget(self.wrapperGrid)
             self.add_widget(self.controlLayout)
+
+    def update_drinks_list(self, *largs):
+
+        # Determine which drinks are now availible
+        for drink in drinksList:
+            canMake = True
+            for ingred in drink["ingredients"]:
+                ingred["og"] = ingred["ml"]
+                liq = getLiquid(ingred["name"])
+                if liq:
+                    if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
+                        canMake = False
+                        break
+                else:
+                    print("unknown liquid: " + str(ingred["name"]))
+                    canMake = False
+                    break
+            drink["canMake"] = canMake
+
+    def change_avail_drink(self, spinner, text, *largs):
+
+        global drinksList
+
+        ind = int(spinner.id[2:])
+        print ("changing availible liquid at index " + str(ind) + " to " + text)
+        liquidsAvail[ind] = text
+        self.update_drinks_list()
 
     def enterCode(self, num, *largs):
 

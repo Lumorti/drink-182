@@ -2,6 +2,15 @@
 
 	"data": [
 	
+		{"name": "debug cocktail 25", "ingredients": [
+			{"name": "debug juice", "ml": 25}
+		]},
+		{"name": "debug cocktail 250", "ingredients": [
+			{"name": "debug juice", "ml": 250}
+		]},
+		{"name": "debug cocktail 2000", "ingredients": [
+			{"name": "debug juice", "ml": 2000}
+		]},
 		{"name": "vodka and lemonade", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "lemonade", "ml": 250}
