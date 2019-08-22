@@ -2,6 +2,9 @@
 
 	"data": [
 	
+		{"name": "full debug cocktail", "ingredients": [
+			{"name": "debug juice", "ml": 25}
+		]},
 		{"name": "debug cocktail 25", "ingredients": [
 			{"name": "debug juice", "ml": 25}
 		]},

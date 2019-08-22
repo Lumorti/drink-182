@@ -12,7 +12,7 @@ int openAngle = 90;
 int closedAngle = 120;
 
 // For controlling the motors
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x41);
 
 void setup(){
 
@@ -56,15 +56,16 @@ void processCommand(String command){
   Serial.print("recieved command: ");
   Serial.println(command);
 
-	// If the command doesn't start and end with '-' then return
-	if (command.charAt(0) != endChar || command.charAt(command.length()-1) != endChar){
-		Serial.println("not a valid command");
-		return;
-	}
+  // If the command doesn't start and end with '-' then return
+  if (command.charAt(0) != endChar || command.charAt(command.length()-1) != endChar){
+	  Serial.println("not a valid command");
+	  return;
+  }
 
-  // String is something like "-1=50+2=250-"
-  // (meaning liquid 1 for 50 ml and liquid 2 for 250 ml)
-  for (int i=1; i<recievedString.length()-2; i++){
+  // String is something like "-90c120o1=50+2=250-"
+  // (valve is closed at 90 degrees and open at 120)
+  // (liquid 1 for 50 ml and liquid 2 for 250 ml)
+  for (int i=1; i<recievedString.length()-1; i++){
 
     if (recievedString.charAt(i) == '='){
 
@@ -79,7 +80,21 @@ void processCommand(String command){
       setMotorAngle(motor, openAngle);
       delay(int((amount / 25.0) * milliPer25));
       setMotorAngle(motor, closedAngle);
+
+	} else if (recievedString.charAt(i) == 'o'){
       
+	  openAngle = current.toInt();
+	  Serial.print("open angle is now: ");
+	  Serial.println(openAngle);
+	  current = "";
+
+	} else if (recievedString.charAt(i) == 'c'){
+      
+	  closedAngle = current.toInt();
+	  Serial.print("closed angle is now: ");
+	  Serial.println(closedAngle);
+	  current = "";
+
     } else {
 
       current = current + recievedString[i];
@@ -93,10 +108,10 @@ void processCommand(String command){
 // Set the motor to a certain angle
 void setMotorAngle(int motor, int angle){
 
-	// Function to convert angle to num of cycles on
-	int pulse_wide, analog_value;
-	pulse_wide = map(angle, 0, 180, int(MIN_PULSE_WIDTH), int(MAX_PULSE_WIDTH));
-	analog_value = int(float(pulse_wide) / 1000000 * FREQUENCY * 4096);
+  // Function to convert angle to num of cycles on
+  int pulse_wide, analog_value;
+  pulse_wide = map(angle, 0, 180, int(MIN_PULSE_WIDTH), int(MAX_PULSE_WIDTH));
+  analog_value = int(float(pulse_wide) / 1000000 * FREQUENCY * 4096);
 
   Serial.print("setting angle of motor ");
   Serial.print(motor);
@@ -106,7 +121,7 @@ void setMotorAngle(int motor, int angle){
   Serial.print(analog_value);
   Serial.println(")");
 
-	// Set the motor to the angle
-	pwm.setPin(motor, analog_value);
+  // Set the motor to the angle
+  pwm.setPin(motor, analog_value);
 
 }

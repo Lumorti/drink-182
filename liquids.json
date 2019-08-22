@@ -2,7 +2,8 @@
 
 "data": [
 
-	{"name": "debug juice",     "units": 0,		"color": "yellow", "subs": ""},
+	{"name": "debug juice",     "units": 0,		"color": "white",  "subs": ""},
+	{"name": "empty",           "units": 0,		"color": "white",  "subs": ""},
 
 	{"name": "lemonade",        "units": 0,		"color": "yellow", "subs": ""},
 	{"name": "cola",            "units": 0,		"color": "black",  "subs": ""},

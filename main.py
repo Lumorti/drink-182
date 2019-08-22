@@ -28,10 +28,6 @@ os.chdir(dname)
 
 fs = 25
 
-maxVol = 350
-maxChange = 25
-maxBooze = 100
-
 correctCode = "19734628"
 
 Builder.load_string("""
@@ -109,7 +105,7 @@ class DrinksUI(Widget):
         self.currentDrink = {}
         self.code = ""
         self.menu = 0
-        self.settings = {"maxBooze": 100, "maxVol": 350, "maxChange": 25}
+        self.settings = {"maxBooze": 100, "maxVol": 350, "maxChange": 25, "closedAngle": 50, "openAngle": 140}
         self.update_drinks_list()
         self.setMenu(0)
 
@@ -151,7 +147,6 @@ class DrinksUI(Widget):
             self.add_widget(self.settingsLayout)
 
         elif self.menu == 1:
-             
 
             # Add the back button
             self.backLayout = AnchorLayout(anchor_x='center', anchor_y='top')
@@ -377,6 +372,30 @@ class DrinksUI(Widget):
             btn.bind(on_press=partial(self.changeSetting, "maxChange", 25))
             self.controlGrid.add_widget(btn)
             
+            # Add a value setting
+            lbl = Label(text="openAngle", size_hint=(None, None), height=50, width=180, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "openAngle", -5))
+            self.controlGrid.add_widget(btn)
+            lbl = Label(id="openAngle",text=str(self.settings["openAngle"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "openAngle", 5))
+            self.controlGrid.add_widget(btn)
+
+            # Add a value setting
+            lbl = Label(text="closedAngle", size_hint=(None, None), height=50, width=180, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "closedAngle", -5))
+            self.controlGrid.add_widget(btn)
+            lbl = Label(id="closedAngle",text=str(self.settings["closedAngle"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "closedAngle", 5))
+            self.controlGrid.add_widget(btn)
+
             # Add the various sections to the root widget
             self.add_widget(self.backLayout)
             self.wrapperGrid.add_widget(self.liquidGrid)
@@ -432,6 +451,8 @@ class DrinksUI(Widget):
         print("making drink:" + repr(drinkObj))
 
         sendString = "-"
+        sendString += str(self.settings["openAngle"]) + "o"
+        sendString += str(self.settings["closedAngle"]) + "c"
         for ing in self.currentDrink["ingredients"]:
             motorIndex = 0
             for index, liq in enumerate(liquidsAvail):
@@ -441,11 +462,20 @@ class DrinksUI(Widget):
             sendString += str(motorIndex) + "=" + str(int(ing["ml"])) + "+"
         sendString += "-\n"
 
+        if (drinkObj["name"] == "full debug cocktail"):
+
+            sendString = "-"
+            sendString += str(self.settings["openAngle"]) + "o"
+            sendString += str(self.settings["closedAngle"]) + "c"
+            for index, liq in enumerate(liquidsAvail):
+                sendString += str(index) + "=" + str(50) + "+"
+            sendString += "-\n"
+
         if self.ser:
-            print("serial availible, sending: " + sendString)
+            print("serial available, sending: " + sendString)
             self.ser.write(bytes(sendString,"utf-8"))
         else:
-            print("serial unavailible")
+            print("serial unavailable")
 
         self.setMenu(0)
 
