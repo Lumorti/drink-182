@@ -519,10 +519,10 @@ class DrinksUI(Widget):
         print("drink has " + str(numUnits) + " units within " + str(totalVol) + " ml")
 
         # Ensure that the drink is valid
-        if numUnits * 25.0 > maxBooze:
+        if numUnits * 25.0 > self.settings["maxBooze"]:
             self.makeLayout.children[0].text = "can't make, too boozy"
             self.makeLayout.children[0].disabled = True
-        elif totalVol > maxVol:
+        elif totalVol > self.settings["maxVol"]:
             self.makeLayout.children[0].text = "can't make, won't fit in cup"
             self.makeLayout.children[0].disabled = True
         else:

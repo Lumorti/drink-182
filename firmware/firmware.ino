@@ -8,8 +8,8 @@ const int FREQUENCY = 50;
 char inByte = ' ';
 String recievedString = "";
 int milliPer25 = 500;
-int openAngle = 90;
-int closedAngle = 120;
+int openAngle = 40;
+int closedAngle = 150;
 
 // For controlling the motors
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x41);
@@ -25,6 +25,10 @@ void setup(){
   // Start the motor
   pwm.begin();
   pwm.setPWMFreq(FREQUENCY);
+
+	for (int i=0;i<8;i++){
+		setMotorAngle(i, closedAngle);
+	}
   
 }
 
