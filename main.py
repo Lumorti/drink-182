@@ -52,8 +52,6 @@ with open("drinks.json") as f:
 print("loaded " + str(len(liquidList)) + " liquids")
 print("loaded " + str(len(drinksList)) + " drinks")
 
-liquidsAvail = ["lemonade", "vodka", "cola", "rum", "tropicalade", "gin", "orangeade", "limeade"]
-
 Config.set('graphics', 'fullscreen', 'borderless')
 Config.set('graphics', 'position', 'custom')
 Config.set('graphics', 'top', '0')
@@ -105,7 +103,13 @@ class DrinksUI(Widget):
         self.currentDrink = {}
         self.code = ""
         self.menu = 0
-        self.settings = {"maxBooze": 100, "maxVol": 350, "maxChange": 25, "milliPer25": 1000}
+
+        # Load the settings from file
+        with open("settings.json") as f:
+            self.settings = json.load(f)
+            print("loaded the following from settings file:")
+            print(self.settings)
+
         self.update_drinks_list()
         self.setMenu(0)
 
@@ -163,6 +167,7 @@ class DrinksUI(Widget):
             self.mainLayout.size = Window.size[0], Window.size[1]
             self.mainLayout.center = Window.center
             layout = GridLayout(cols=1, spacing=30, size_hint_y=None)
+            layout.size_hint_x = 0.8
             layout.bind(minimum_height=layout.setter('height'))
             
             # Add all the different drinks
@@ -185,7 +190,10 @@ class DrinksUI(Widget):
             scrolling.size_hint = None, None
             scrolling.size = self.mainLayout.size[0]*0.75, self.mainLayout.size[1]*0.83
             scrolling.center = self.mainLayout.center
-            scrolling.bar_width = 0
+            scrolling.bar_width = 30
+            scrolling.bar_margin = 0
+            scrolling.bar_inactive_color = [.7,.7,.7,.9]
+            scrolling.scroll_type = ["bars"]
             layout.center = scrolling.center
             self.mainLayout.add_widget(scrolling)
 
@@ -211,7 +219,7 @@ class DrinksUI(Widget):
             self.makeLayout.size = Window.size[0], Window.size[1] * 0.95
             self.makeLayout.center = Window.center
             btn = Button(id="btnmake", text = "make", size_hint=(None, None), size=(Window.width/1.1, Window.height/10.0), font_size=fs)
-            buttonEvent = partial(self.makeDrink, self.currentDrink)
+            buttonEvent = partial(self.makeDrink)
             btn.bind(on_press=buttonEvent)
             self.makeLayout.add_widget(btn)
 
@@ -222,7 +230,7 @@ class DrinksUI(Widget):
             self.drinkLayout.center = Window.center
 
             for ing in self.currentDrink["ingredients"]:
-                if ing["name"] not in liquidsAvail:
+                if ing["name"] not in self.settings["liquidsAvail"]:
                     print("substituting " + ing["name"] + " for " + getLiquid(ing["name"])["subs"])
                     ing["oldName"] = ing["name"]
                     ing["name"] = getLiquid(ing["name"])["subs"]
@@ -319,7 +327,7 @@ class DrinksUI(Widget):
             self.liquidGrid = GridLayout(cols=2, spacing=15, size_hint=(None,None))
             self.liquidGrid.size = (self.wrapperGrid.size[0]*0.9, self.wrapperGrid.size[1] * 0.5) 
             self.liquidGrid.center = (self.wrapperGrid.center[0],self.wrapperGrid.center[1])
-            for index, liq in enumerate(liquidsAvail):
+            for index, liq in enumerate(self.settings["liquidsAvail"]):
                 spinner = Spinner(
                     text=liq,
                     id="sd"+str(index),
@@ -400,7 +408,7 @@ class DrinksUI(Widget):
                 ingred["og"] = ingred["ml"]
                 liq = getLiquid(ingred["name"])
                 if liq:
-                    if liq["name"] not in liquidsAvail and liq["subs"] not in liquidsAvail:
+                    if liq["name"] not in self.settings["liquidsAvail"] and liq["subs"] not in self.settings["liquidsAvail"]:
                         canMake = False
                         break
                 else:
@@ -415,8 +423,11 @@ class DrinksUI(Widget):
 
         ind = int(spinner.id[2:])
         print ("changing availible liquid at index " + str(ind) + " to " + text)
-        liquidsAvail[ind] = text
+        self.settings["liquidsAvail"][ind] = text
         self.update_drinks_list()
+
+        with open("settings.json", "w") as f:
+            json.dump(self.settings, f)
 
     def enterCode(self, num, *largs):
 
@@ -434,15 +445,23 @@ class DrinksUI(Widget):
         print("drink is now: " + repr(self.currentDrink))
         self.setMenu(2)
 
-    def makeDrink(self, drinkObj, *largs):
+    def makeDrink(self, *largs):
 
-        print("making drink:" + repr(drinkObj))
+        print("making drink:" + repr(self.currentDrink))
 
+        # Move this to the top of the list
+        for drink in drinksList:
+            if drink["name"] == self.currentDrink["name"]:
+                drinksList.insert(0, drink)
+                drinksList[1:].remove(drink)
+                break
+
+        # Generate the string to send to the Arduino
         sendString = "-"
         sendString += str(self.settings["milliPer25"]) + "o"
         for ing in self.currentDrink["ingredients"]:
             motorIndex = 0
-            for index, liq in enumerate(liquidsAvail):
+            for index, liq in enumerate(self.settings["liquidsAvail"]):
                 if liq == ing["name"]: 
                     motorIndex = index
                     break
@@ -453,7 +472,7 @@ class DrinksUI(Widget):
             print("serial available, sending: " + sendString)
             self.ser.write(bytes(sendString,"utf-8"))
         else:
-            print("serial unavailable")
+            print("serial unavailable, would've sent: " + sendString)
 
         self.setMenu(0)
 
@@ -463,6 +482,9 @@ class DrinksUI(Widget):
         for wid in self.controlGrid.children:
             if wid.id == setting:
                 wid.text = str(self.settings[setting])
+
+        with open("settings.json", "w") as f:
+            json.dump(self.settings, f)
 
         print("setting " + setting + " is now " + str(self.settings[setting]))
 
@@ -500,7 +522,7 @@ class DrinksUI(Widget):
         if numUnits * 25.0 > self.settings["maxBooze"]:
             self.makeLayout.children[0].text = "can't make, too boozy"
             self.makeLayout.children[0].disabled = True
-        elif totalVol > self.settings["maxVol"]:
+        elif totalVol > self.settings["maxVol"] and not "debug" in self.currentDrink["name"]:
             self.makeLayout.children[0].text = "can't make, won't fit in cup"
             self.makeLayout.children[0].disabled = True
         else:

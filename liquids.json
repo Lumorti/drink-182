@@ -5,13 +5,13 @@
 	{"name": "debug juice",     "units": 0,		"color": "white",  "subs": ""},
 	{"name": "empty",           "units": 0,		"color": "white",  "subs": ""},
 
+	{"name": "gin",             "units": 1,		"color": "white",  "subs": ""},
+	{"name": "rum",             "units": 1,		"color": "brown",  "subs": ""},
+	{"name": "vodka",           "units": 1,		"color": "white",  "subs": ""},
 	{"name": "lemonade",        "units": 0,		"color": "yellow", "subs": ""},
 	{"name": "cola",            "units": 0,		"color": "black",  "subs": ""},
 	{"name": "orangeade",       "units": 0,		"color": "orange", "subs": "orange juice"},
 	{"name": "tropicalade",     "units": 0,		"color": "yellow", "subs": "pineapple juice"},
-	{"name": "vodka",           "units": 1,		"color": "white",  "subs": ""},
-	{"name": "gin",             "units": 1,		"color": "white",  "subs": ""},
-	{"name": "rum",             "units": 1,		"color": "brown",  "subs": ""},
 
 	{"name": "cranberry juice", "units": 0,		"color": "red",    "subs": ""},
 	{"name": "whiskey",			"units": 1,		"color": "brown",  "subs": ""},
@@ -27,7 +27,7 @@
 	{"name": "triple sec",		"units": 1,		"color": "orange", "subs": "orangeade"},
 	{"name": "orange juice",	"units": 0,		"color": "orange", "subs": "orangeade"},
 	{"name": "pineapple juice", "units": 0,		"color": "yellow", "subs": "tropicalade"},
-	{"name": "tonic",			"units": 0,		"color": "white",  "subs": "lemonade"},
+	{"name": "tonic",			"units": 0,		"color": "white",  "subs": ""},
 	{"name": "cream soda",		"units": 0,		"color": "white",  "subs": "lemonade"}
 
 ]

@@ -2,9 +2,6 @@
 
 	"data": [
 	
-		{"name": "full debug cocktail", "ingredients": [
-			{"name": "debug juice", "ml": 25}
-		]},
 		{"name": "debug cocktail 25", "ingredients": [
 			{"name": "debug juice", "ml": 25}
 		]},
@@ -14,9 +11,28 @@
 		{"name": "debug cocktail 2000", "ingredients": [
 			{"name": "debug juice", "ml": 2000}
 		]},
+		{"name": "vodka shot", "ingredients": [
+			{"name": "vodka", "ml": 25}
+		]},
+		{"name": "rum shot", "ingredients": [
+			{"name": "rum", "ml": 25}
+		]},
+		{"name": "gin shot", "ingredients": [
+			{"name": "gin", "ml": 25}
+		]},
 		{"name": "vodka and lemonade", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "lemonade", "ml": 250}
+		]},
+		{"name": "dirty pint", "ingredients": [
+			{"name": "rum", "ml": 25},
+			{"name": "gin", "ml": 25},
+			{"name": "orangeade", "ml": 50},
+			{"name": "limeade", "ml": 50},
+			{"name": "tropicalade", "ml": 50},
+			{"name": "cola", "ml": 50},
+			{"name": "lemonade", "ml": 50},
+			{"name": "vodka", "ml": 25}
 		]},
 		{"name": "whiskey and coke", "ingredients": [
 			{"name": "whiskey", "ml": 50},
@@ -26,7 +42,11 @@
 			{"name": "rum", "ml": 50},
 			{"name": "cola", "ml": 250}
 		]},
-		{"name": "vodka and coke", "ingredients": [
+		{"name": "vodka lemonade", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "lemonade", "ml": 250}
+		]},
+		{"name": "vodka coke", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "cola", "ml": 250}
 		]},
@@ -56,7 +76,7 @@
 			{"name": "vermouth", "ml": 250}
 		]},
 		{"name": "cosmopolitan", "ingredients": [
-			{"name": "vodka", "ml": 25},
+			{"name": "vodka", "ml": 50},
 			{"name": "triple sec", "ml": 25},
 			{"name": "cranberry juice", "ml": 250}
 		]},
@@ -70,7 +90,7 @@
 			{"name": "pineapple juice", "ml": 250}
 		]},
 		{"name": "mai tai", "ingredients": [
-			{"name": "rum", "ml": 25},
+			{"name": "rum", "ml": 50},
 			{"name": "triple sec", "ml": 25},
 			{"name": "orangeade", "ml": 250}
 		]},
@@ -84,15 +104,20 @@
 			{"name": "tomato juice", "ml": 250}
 		]},
 		{"name": "margarita", "ingredients": [
-			{"name": "tequila", "ml": 25},
+			{"name": "tequila", "ml": 59},
 			{"name": "triple sec", "ml": 25},
 			{"name": "limeade", "ml": 250}
 		]},
 		{"name": "sex on the beach", "ingredients": [
-			{"name": "vodka", "ml": 25},
+			{"name": "vodka", "ml": 50},
 			{"name": "schnapps", "ml": 25},
 			{"name": "orange juice", "ml": 125},
 			{"name": "cranberry juice", "ml": 125}
+		]},
+		{"name": "woo woo", "ingredients": [
+			{"name": "vodka", "ml": 50},
+			{"name": "schnapps", "ml": 25},
+			{"name": "cranberry juice", "ml": 175}
 		]},
 		{"name": "martini", "ingredients": [
 			{"name": "gin", "ml": 50},
