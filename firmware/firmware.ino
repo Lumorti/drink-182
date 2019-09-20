@@ -49,6 +49,9 @@ void processCommand(String command){
   String current = "";
   char endChar = '-';
 
+	Serial.print("com: ");
+	Serial.println(command);
+
   // If the command doesn't start and end with '-' then return
   if (command.charAt(0) != endChar || command.charAt(command.length()-1) != endChar){
 	  return;
@@ -69,15 +72,21 @@ void processCommand(String command){
       amount = current.toInt();
       current = "";
 			
+			Serial.print("mot: ");
 			Serial.println(motor);
+			Serial.print("time: ");
 			Serial.println(int((amount / 25.0) * milliPer25));
+			Serial.flush();
 
-      digitalWrite(motor+2, LOW);
+			digitalWrite(motor+2, LOW);
       delay(int((amount / 25.0) * milliPer25));
-      digitalWrite(motor+2, HIGH);
+			digitalWrite(motor+2, HIGH);
+			delay(2000);
+
+			Serial.println("fin");
 
 		} else if (recievedString.charAt(i) == 'o'){
-      
+		
 			milliPer25 = current.toInt();
 			current = "";
 
