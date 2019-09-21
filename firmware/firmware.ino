@@ -6,7 +6,6 @@ const int FREQUENCY = 50;
 
 char inByte = ' ';
 String recievedString = "";
-int milliPer25 = 1000;
 
 void setup(){
 
@@ -54,7 +53,8 @@ void processCommand(String command){
 
   // If the command doesn't start and end with '-' then return
   if (command.charAt(0) != endChar || command.charAt(command.length()-1) != endChar){
-	  return;
+		Serial.println("err");
+		return;
   }
 
   // String is something like "-1200o1=50+2=250+-"
@@ -75,20 +75,13 @@ void processCommand(String command){
 			Serial.print("mot: ");
 			Serial.println(motor);
 			Serial.print("time: ");
-			Serial.println(int((amount / 25.0) * milliPer25));
+			Serial.println(amount);
 			Serial.flush();
 
 			digitalWrite(motor+2, LOW);
-      delay(int((amount / 25.0) * milliPer25));
+			delay(amount);
 			digitalWrite(motor+2, HIGH);
-			delay(2000);
-
-			Serial.println("fin");
-
-		} else if (recievedString.charAt(i) == 'o'){
-		
-			milliPer25 = current.toInt();
-			current = "";
+			delay(200);
 
 		} else {
 

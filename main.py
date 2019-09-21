@@ -22,13 +22,16 @@ import glob
 import serial
 import os
 
+os.environ['KIVY_WINDOW'] = 'egl_rpi'
+
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
 fs = 25
 
-correctCode = "19734628"
+correctCode = ""
+# correctCode = "19734628"
 
 Builder.load_string("""
 
@@ -380,13 +383,25 @@ class DrinksUI(Widget):
             btn.bind(on_press=partial(self.changeSetting, "maxChange", 25))
             self.controlGrid.add_widget(btn)
             
+            # Add buttons to change active solenoid setting 
+            lbl = Label(text="selectedDrink", size_hint=(None, None), height=50, width=180, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "selectedSetting", -1))
+            self.controlGrid.add_widget(btn)
+            lbl = Label(id="selectedSetting",text=str(self.settings["selectedSetting"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            self.controlGrid.add_widget(lbl)
+            btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
+            btn.bind(on_press=partial(self.changeSetting, "selectedSetting", 1))
+            self.controlGrid.add_widget(btn)
+
             # Add a value setting
             lbl = Label(text="milliPer25", size_hint=(None, None), height=50, width=180, font_size=fs)
             self.controlGrid.add_widget(lbl)
             btn = Button(text="-", size_hint=(None, None), height=50, width=50, font_size=fs)
-            btn.bind(on_press=partial(self.changeSetting, "milliPer25", -5))
+            btn.bind(on_press=partial(self.changeSetting, "milliPer25", -5, self.settings["selectedSetting"]))
             self.controlGrid.add_widget(btn)
-            lbl = Label(id="milliPer25",text=str(self.settings["milliPer25"]), size_hint=(None, None), height=50, width=80, font_size=fs)
+            lbl = Label(id="milliPer25",text=str(self.settings["milliPer25"][self.settings["selectedSetting"]-1]), size_hint=(None, None), height=50, width=80, font_size=fs)
             self.controlGrid.add_widget(lbl)
             btn = Button(text="+", size_hint=(None, None), height=50, width=50, font_size=fs)
             btn.bind(on_press=partial(self.changeSetting, "milliPer25", 5))
@@ -458,14 +473,13 @@ class DrinksUI(Widget):
 
         # Generate the string to send to the Arduino
         sendString = "-"
-        sendString += str(self.settings["milliPer25"]) + "o"
         for ing in self.currentDrink["ingredients"]:
             motorIndex = 0
             for index, liq in enumerate(self.settings["liquidsAvail"]):
                 if liq == ing["name"]: 
                     motorIndex = index
                     break
-            sendString += str(motorIndex) + "=" + str(int(ing["ml"])) + "+"
+            sendString += str(motorIndex) + "=" + str(int(self.settings["milliPer25"][motorIndex]*(ing["ml"]/25))) + "+"
         sendString += "-\n"
 
         if self.ser:
@@ -476,12 +490,28 @@ class DrinksUI(Widget):
 
         self.setMenu(0)
 
-    def changeSetting(self, setting, change, *largs):
+    def changeSetting(self, setting, change, selectedIndex=-1,*largs):
 
-        self.settings[setting] += change
-        for wid in self.controlGrid.children:
-            if wid.id == setting:
-                wid.text = str(self.settings[setting])
+        if setting != "milliPer25":
+
+            self.settings[setting] += change
+
+            if setting == "selectedSetting" and (self.settings[setting] > 8 or self.settings[setting] < 1):
+                self.settings[setting] -= change
+
+            for wid in self.controlGrid.children:
+                if wid.id == setting:
+                    wid.text = str(self.settings[setting])
+                elif setting == "selectedSetting" and wid.id == "milliPer25":
+                    wid.text = str(self.settings["milliPer25"][self.settings[setting]-1])
+
+        else:
+
+            self.settings[setting][self.settings["selectedSetting"]-1] += change
+
+            for wid in self.controlGrid.children:
+                if wid.id == setting:
+                    wid.text = str(self.settings[setting][self.settings["selectedSetting"]-1])
 
         with open("settings.json", "w") as f:
             json.dump(self.settings, f)
