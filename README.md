@@ -14,23 +14,24 @@ A machine that makes cocktails
  - An 8-channel optocoupler
  - 8 normally closed solenoid valves
  - An AC/DC power supply
+ - A 5V to 12V buck converter, although this depends on the voltage required by your solenoid valves
  - A fair few sheets of wood or some material to make it out of (I used MDF)
 
 ### The Software
 
-![screenshot of start screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_start.png)
+![screenshot of start screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_start.png | width=100)
 
-![screenshot of selection screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_selection.png)
+![screenshot of selection screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_selection.png | width=100)
 
-![screenshot of make screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_make.png)
+![screenshot of make screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_make.png | width=100)
 
-![screenshot of debug screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_debug.png)
-
-### The Panels
-
-![wood cutting plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/mdf_plan.svg)
+![screenshot of debug screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_debug.png | width=100)
 
 ### The Circuit
 
-![circuit plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/circuit_plan.svg)
+![circuit plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/circuit_plan.png | width=200)
+
+### The Panels
+
+![wood cutting plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/mdf_plan.png | width=200)
 
