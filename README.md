@@ -19,19 +19,15 @@ A machine that makes cocktails
 
 ### The Software
 
-![screenshot of start screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_start.png | width=100)
+![screenshot of selection screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_selection.png)
 
-![screenshot of selection screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_selection.png | width=100)
-
-![screenshot of make screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_make.png | width=100)
-
-![screenshot of debug screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_debug.png | width=100)
+![screenshot of make screen](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/ui_make.png)
 
 ### The Circuit
 
-![circuit plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/circuit_plan.png | width=200)
+![circuit plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/circuit_plan.png)
 
 ### The Panels
 
-![wood cutting plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/mdf_plan.png | width=200)
+![wood cutting plan](https://raw.githubusercontent.com/Lumorti/drink-182/master/images/mdf_plan.png)
 
