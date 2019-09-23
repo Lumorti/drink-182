@@ -1,9 +1,5 @@
 #include <Wire.h>
 
-const int MIN_PULSE_WIDTH = 500;
-const int MAX_PULSE_WIDTH = 2000;
-const int FREQUENCY = 50;
-
 char inByte = ' ';
 String recievedString = "";
 
@@ -20,6 +16,8 @@ void setup(){
 		pinMode(i, OUTPUT);	
 		digitalWrite(i, HIGH);
 	}
+
+  Serial.println("restarted");
  
 }
 
@@ -43,8 +41,8 @@ void loop(){
 
 void processCommand(String command){
 
-  int motor = -1;
-  int amount = 0;
+  long int motor = -1;
+  long int amount = 0;
   String current = "";
   char endChar = '-';
 
@@ -57,9 +55,8 @@ void processCommand(String command){
 		return;
   }
 
-  // String is something like "-1200o1=50+2=250+-"
-  // (valve should open for 1200 milliseconds per 25 ml)
-  // (liquid 1 for 50 ml and liquid 2 for 250 ml)
+  // String is something like "-1=9000+2=8000+-"
+  // (liquid 1 for 9000 ms and liquid 2 for 8000 ms)
   for (int i=1; i<recievedString.length()-1; i++){
 
     if (recievedString.charAt(i) == '='){
@@ -81,7 +78,7 @@ void processCommand(String command){
 			digitalWrite(motor+2, LOW);
 			delay(amount);
 			digitalWrite(motor+2, HIGH);
-			delay(200);
+			delay(1000);
 
 		} else {
 

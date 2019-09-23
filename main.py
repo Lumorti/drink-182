@@ -30,8 +30,8 @@ os.chdir(dname)
 
 fs = 25
 
-correctCode = ""
-# correctCode = "19734628"
+# correctCode = ""
+correctCode = "19734628"
 
 Builder.load_string("""
 
@@ -465,10 +465,9 @@ class DrinksUI(Widget):
         print("making drink:" + repr(self.currentDrink))
 
         # Move this to the top of the list
-        for drink in drinksList:
+        for k, drink in enumerate(drinksList):
             if drink["name"] == self.currentDrink["name"]:
-                drinksList.insert(0, drink)
-                drinksList[1:].remove(drink)
+                drinksList.insert(0, drinksList.pop(k))
                 break
 
         # Generate the string to send to the Arduino
@@ -484,6 +483,8 @@ class DrinksUI(Widget):
 
         if self.ser:
             print("serial available, sending: " + sendString)
+            self.ser.flushOutput()
+            time.sleep(0.1)
             self.ser.write(bytes(sendString,"utf-8"))
         else:
             print("serial unavailable, would've sent: " + sendString)

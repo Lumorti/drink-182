@@ -20,20 +20,6 @@
 		{"name": "gin shot", "ingredients": [
 			{"name": "gin", "ml": 25}
 		]},
-		{"name": "vodka and lemonade", "ingredients": [
-			{"name": "vodka", "ml": 50},
-			{"name": "lemonade", "ml": 250}
-		]},
-		{"name": "dirty pint", "ingredients": [
-			{"name": "rum", "ml": 25},
-			{"name": "gin", "ml": 25},
-			{"name": "orangeade", "ml": 50},
-			{"name": "limeade", "ml": 50},
-			{"name": "tropicalade", "ml": 50},
-			{"name": "cola", "ml": 50},
-			{"name": "lemonade", "ml": 50},
-			{"name": "vodka", "ml": 25}
-		]},
 		{"name": "whiskey and coke", "ingredients": [
 			{"name": "whiskey", "ml": 50},
 			{"name": "cola", "ml": 250}
@@ -147,6 +133,31 @@
 		{"name": "vodka gimlet", "ingredients": [
 			{"name": "vodka", "ml": 50},
 			{"name": "limeade", "ml": 50}
+		]},
+		{"name": "dirty pint", "ingredients": [
+			{"name": "rum", "ml": 25},
+			{"name": "gin", "ml": 25},
+			{"name": "orangeade", "ml": 50},
+			{"name": "limeade", "ml": 50},
+			{"name": "tropicalade", "ml": 50},
+			{"name": "cola", "ml": 50},
+			{"name": "lemonade", "ml": 50},
+			{"name": "vodka", "ml": 25}
+		]},
+		{"name": "limeade shot", "ingredients": [
+			{"name": "limeade", "ml": 25}
+		]},
+		{"name": "cola shot", "ingredients": [
+			{"name": "cola", "ml": 25}
+		]},
+		{"name": "lemonade shot", "ingredients": [
+			{"name": "lemonade", "ml": 25}
+		]},
+		{"name": "orangeade shot", "ingredients": [
+			{"name": "orangeade", "ml": 25}
+		]},
+		{"name": "tropicalade shot", "ingredients": [
+			{"name": "tropicalade", "ml": 25}
 		]},
 		{"name": "gimlet", "ingredients": [
 			{"name": "gin", "ml": 50},
